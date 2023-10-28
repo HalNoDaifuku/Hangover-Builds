@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Build Hangover on x86_64
+      run: |
+        docker run --rm -i -v $PWD:/root --name x86_64_build amd64/ubuntu:jammy bash <<EOS
+        pushd /root
+        ./build.sh --arch=x86_64
+        popd
+        EOS
+
+    - name: Build Hangover on arm64
+      run: |
+        docker run --rm -i -v $PWD/build/arm64:/root --name arm64_build arm64v8/ubuntu:jammy bash <<EOS
+
+        pushd /root
+        ./build.sh --arch=arm64
+        popd
+        EOS
