@@ -116,6 +116,12 @@ detect_arch() {
 
         # x86_64 environments
         export DEPENDENCIES="
+            libglib2.0-dev \
+            libfdt-dev \
+            libpixman-1-dev \
+            zlib1g-dev \
+            ninja-build \
+            \
             gcc-multilib \
             gcc-mingw-w64 \
             libasound2-dev \
