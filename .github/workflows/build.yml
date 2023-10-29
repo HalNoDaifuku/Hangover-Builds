@@ -27,7 +27,7 @@ jobs:
 
     - name: Build Hangover on arm64
       run: |
-        docker run --rm -i -v $PWD/build/arm64:/root --name arm64_build arm64v8/ubuntu:jammy bash <<EOS
+        docker run --rm -i -v $PWD:/root --name arm64_build arm64v8/ubuntu:jammy bash <<EOS
 
         pushd /root
         ./build.sh --arch=arm64
