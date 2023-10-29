@@ -14,6 +14,15 @@ export BASE_PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 # Check options
 check_options() {
+    if ! (type curl > /dev/null 2>&1); then
+        printf "${RED}" "curl command not found!"
+        printf "${CYAN}" "Installing curl..."
+        apt update
+        apt install -y curl
+    else
+        printf "${CYAN}" "curl command found!"
+    fi
+
     # getoptions: https://github.com/ko1nksm/getoptions
     getoptions() {
         curl -fsSL "${GETOPTIONS_URL}" | bash -s -- "$@"
