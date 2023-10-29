@@ -116,6 +116,7 @@ detect_arch() {
         popd || exit
     }
 
+    # Build FEX PE
     build_fex_pe() {
         printf "${CYAN}" "Building FEX(PE)..."
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
