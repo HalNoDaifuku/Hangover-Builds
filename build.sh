@@ -80,7 +80,7 @@ detect_arch() {
         printf "${CYAN}" "Installing LLVM..."
         mkdir -p llvm
         pushd llvm || exit
-        curl -L -C - "${LLVM_URL}" > "${LLVM_FILE_NAME}.tar.xz"
+        curl -L -C - "${LLVM_URL}" > "${LLVM_FILE_NAME}"
         tar -xJf "${LLVM_FILE_NAME}"
         rm -f "${LLVM_FILE_NAME}"
         popd || exit
