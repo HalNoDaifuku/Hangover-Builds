@@ -95,8 +95,8 @@ detect_arch() {
     # Build Wine
     build_wine() {
         printf "${CYAN}" "Building Wine..."
-        mkdir -p wine/build
-        pushd wine/build || exit
+        mkdir -p hangover/wine/build
+        pushd hangover/wine/build || exit
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         ../configure "${WINE_BUILD_OPTION}"
         make -j"$(nproc)"
