@@ -55,7 +55,7 @@ check_sudo_command() {
 clone_hangover() {
     if ! (type git > /dev/null 2>&1); then
         printf "${RED}" "git command not found!"
-        printf "${CYAN}" "Installing git"
+        printf "${CYAN}" "Installing git..."
         apt update
         apt install -y git
     else
