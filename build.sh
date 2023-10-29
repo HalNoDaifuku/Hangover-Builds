@@ -88,6 +88,14 @@ detect_arch() {
 
     # Build QEMU
     build_qemu() {
+        printf "${CYAN}" "Installing QEMU dependencies..."
+        sudo apt install -y \
+            libglib2.0-dev \
+            libfdt-dev \
+            libpixman-1-dev \
+            zlib1g-dev \
+            ninja-build
+
         printf "${CYAN}" "Building QEMU..."
         export PATH="${BASE_PATH}"
         mkdir hangover/qemu/build
@@ -137,12 +145,6 @@ detect_arch() {
 
         # x86_64 environments
         export DEPENDENCIES="
-            libglib2.0-dev \
-            libfdt-dev \
-            libpixman-1-dev \
-            zlib1g-dev \
-            ninja-build \
-            \
             gcc-multilib \
             gcc-mingw-w64 \
             libasound2-dev \
