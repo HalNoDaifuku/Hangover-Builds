@@ -156,7 +156,6 @@ detect_arch() {
             libpcap-dev \
             libusb-1.0-0-dev \
             libv4l-dev \
-            \
             flex \
             libbison-dev \
             clang
