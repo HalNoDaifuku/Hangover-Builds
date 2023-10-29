@@ -195,8 +195,57 @@ detect_arch() {
         build_wine
     elif [ arm64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected arm64!"
-        printf "${RED}" "not available"
-        exit 1
+
+        # arm64 environments
+        export DEPENDENCIES="
+            gcc-multilib \
+            gcc-mingw-w64 \
+            libasound2-dev \
+            libpulse-dev \
+            libdbus-1-dev \
+            libfontconfig-dev \
+            libfreetype-dev \
+            libgnutls28-dev \
+            libgl-dev \
+            libunwind-dev \
+            libx11-dev \
+            libxcomposite-dev \
+            libxcursor-dev \
+            libxfixes-dev \
+            libxi-dev \
+            libxrandr-dev \
+            libxrender-dev \
+            libxext-dev \
+            libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libosmesa6-dev \
+            libsdl2-dev \
+            libudev-dev \
+            libvulkan-dev \
+            libcapi20-dev \
+            libcups2-dev \
+            libgphoto2-dev \
+            libsane-dev \
+            libkrb5-dev \
+            samba-dev \
+            ocl-icd-opencl-dev \
+            libpcap-dev \
+            libusb-1.0-0-dev \
+            libv4l-dev \
+            flex \
+            libbison-dev \
+            clang
+        "
+        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64.tar.xz"
+        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64"
+        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
+        export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
+        export INSTALL_FOLDER_NAME="build_arm64"
+
+        install_dependencies
+        install_llvm
+        build_qemu
+        build_wine
     fi
 }
 
