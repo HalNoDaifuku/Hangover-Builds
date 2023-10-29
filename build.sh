@@ -52,7 +52,8 @@ detect_arch() {
     # Install dependencies
     install_dependencies() {
         printf "${CYAN}" "Installing dependencies..."
-        sudo apt install -y "${DEPENDENCIES}"
+        # shellcheck disable=SC2086
+        sudo apt install -y ${DEPENDENCIES}
     }
 
     # Install LLVM
