@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2059
 
-set -eu
+set -eux
 
 # Environments
 export VERSION="0.0.1"
