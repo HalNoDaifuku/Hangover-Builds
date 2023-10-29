@@ -146,7 +146,8 @@ detect_arch() {
             libusb-1.0-0-dev \
             libv4l-dev \
             \
-            flex
+            flex \
+            libbison-dev \
         "
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
