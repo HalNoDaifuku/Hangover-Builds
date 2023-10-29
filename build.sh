@@ -131,7 +131,7 @@ detect_arch() {
         "
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
-        export LLVM_FILE_NAME="${X86_64_LLVM_FOLDER_NAME}.tar.xz"
+        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export WINE_BUILD_OPTION="--enable-win64 --disable-tests --with-mingw --enable-archs=i386,x86_64,arm"
 
         install_dependencies
