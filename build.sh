@@ -97,6 +97,17 @@ detect_arch() {
         popd || exit
     }
 
+    # Build FEX Unix
+    build_fex_unix() {
+        printf "${CYAN}" "Building FEX(Unix)..."
+        export PATH="${BASE_PATH}"
+        mkdir -p hangover/fex/build_unix
+        pushd hangover/fex/build_unix || exit
+        CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+        make -j"$(nproc)" FEXCore_shared
+        popd || exit
+    }
+
     # Build Wine
     build_wine() {
         printf "${CYAN}" "Building Wine..."
