@@ -193,6 +193,8 @@ detect_arch() {
         install_dependencies
         install_llvm
         build_qemu
+        build_fex_unix
+        build_fex_pe
         build_wine
     elif [ arm64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected arm64!"
@@ -246,6 +248,8 @@ detect_arch() {
         install_dependencies
         install_llvm
         build_qemu
+        build_fex_unix
+        build_fex_pe
         build_wine
     fi
 }
