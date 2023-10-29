@@ -45,11 +45,6 @@ check_sudo_command() {
 # Get hangover repository hash
 clone_hangover() {
     git clone --recursive "${HANGOVER_REPOSITORY}" hangover
-    pushd hangover || exit
-    HANGOVER_HASH="$(git rev-parse HEAD)"
-    export HANGOVER_HASH
-    popd || exit
-    rm -rf hangover
 }
 
 # Detect arch
