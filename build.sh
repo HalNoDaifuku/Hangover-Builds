@@ -43,7 +43,7 @@ check_sudo_command() {
 }
 
 # Get hangover repository hash
-hangover_hash() {
+clone_hangover() {
     git clone --recursive "${HANGOVER_REPOSITORY}" hangover
     pushd hangover || exit
     HANGOVER_HASH="$(git rev-parse HEAD)"
@@ -149,6 +149,6 @@ check_options "$@"
 mkdir -p build
 pushd build || exit
 check_sudo_command
-hangover_hash
+clone_hangover
 detect_arch
 popd || exit
