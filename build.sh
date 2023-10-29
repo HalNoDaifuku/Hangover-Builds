@@ -90,6 +90,11 @@ detect_arch() {
     build_qemu() {
         printf "${CYAN}" "Building QEMU..."
         export PATH="${BASE_PATH}"
+        mkdir hangover/qemu/build
+        pushd hangover/qemu/build || exit
+        ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
+        make -j"$(nproc)"
+        popd || exit
     }
 
     # Build Wine
@@ -158,6 +163,7 @@ detect_arch() {
 
         install_dependencies
         install_llvm
+        build_qemu
         build_wine
     elif [ arm64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected arm64!"
