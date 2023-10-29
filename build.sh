@@ -98,7 +98,8 @@ detect_arch() {
         mkdir -p hangover/wine/build
         pushd hangover/wine/build || exit
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
-        ../configure "${WINE_BUILD_OPTION}"
+        # shellcheck disable=SC2086
+        ../configure ${WINE_BUILD_OPTION}
         make -j"$(nproc)"
         make install --prefix "../../../${INSTALL_FOLDER_NAME}"
         popd || exit
