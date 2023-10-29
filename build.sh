@@ -100,6 +100,7 @@ detect_arch() {
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         ../configure "${WINE_BUILD_OPTION}"
         make -j"$(nproc)"
+        make install --prefix "../../../${INSTALL_FOLDER_NAME}"
         popd || exit
     }
 
@@ -148,6 +149,7 @@ detect_arch() {
         export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export WINE_BUILD_OPTION="--enable-win64 --disable-tests --with-mingw --enable-archs=i386,x86_64,arm"
+        export INSTALL_FOLDER_NAME="build_x86_64"
 
         install_dependencies
         install_llvm
