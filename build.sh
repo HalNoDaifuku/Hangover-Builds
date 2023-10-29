@@ -108,6 +108,16 @@ detect_arch() {
         popd || exit
     }
 
+    build_fex_pe() {
+        printf "${CYAN}" "Building FEX(PE)..."
+        export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
+        mkdir -p hangover/fex/build_pe
+        pushd hangover/fex/build_pe || exit
+        cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+        make -j"$(nproc)" wow64fex
+        popd || exit
+    }
+
     # Build Wine
     build_wine() {
         printf "${CYAN}" "Building Wine..."
