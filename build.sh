@@ -70,6 +70,7 @@ detect_arch() {
     # Install dependencies
     install_dependencies() {
         printf "${CYAN}" "Installing dependencies..."
+        sudo apt update
         # shellcheck disable=SC2086
         sudo apt install -y ${DEPENDENCIES}
     }
