@@ -67,14 +67,6 @@ clone_hangover() {
 
 # Detect arch
 detect_arch() {
-    # Install dependencies
-    install_dependencies() {
-        printf "${CYAN}" "Installing dependencies..."
-        sudo apt update
-        # shellcheck disable=SC2086
-        sudo apt install -y ${DEPENDENCIES}
-    }
-
     # Install LLVM
     install_llvm() {
         printf "${CYAN}" "Installing LLVM..."
@@ -129,6 +121,10 @@ detect_arch() {
 
     # Build Wine
     build_wine() {
+        printf "${CYAN}" "Installing Wine dependencies..."
+        # shellcheck disable=SC2086
+        sudo apt install -y ${WINE_DEPENDENCIES}
+
         printf "${CYAN}" "Building Wine..."
         mkdir -p hangover/wine/build
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
@@ -140,12 +136,14 @@ detect_arch() {
         popd || exit
     }
 
+    sudo apt update
+
     # Detect arch
     if [ x86_64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected x86_64!"
 
         # x86_64 environments
-        export DEPENDENCIES="
+        export WINE_DEPENDENCIES="
             gcc-multilib \
             gcc-mingw-w64 \
             libasound2-dev \
@@ -190,7 +188,6 @@ detect_arch() {
         export WINE_BUILD_OPTION="--enable-win64 --disable-tests --with-mingw --enable-archs=i386,x86_64,arm"
         export INSTALL_FOLDER_NAME="build_x86_64"
 
-        install_dependencies
         install_llvm
         build_qemu
         build_fex_unix
@@ -200,7 +197,7 @@ detect_arch() {
         printf "${CYAN}" "You selected arm64!"
 
         # arm64 environments
-        export DEPENDENCIES="
+        export WINE_DEPENDENCIES="
             gcc-multilib \
             gcc-mingw-w64 \
             libasound2-dev \
@@ -245,7 +242,6 @@ detect_arch() {
         export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
         export INSTALL_FOLDER_NAME="build_arm64"
 
-        install_dependencies
         install_llvm
         build_qemu
         build_fex_unix
