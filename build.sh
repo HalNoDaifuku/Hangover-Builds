@@ -109,7 +109,7 @@ detect_arch() {
         export PATH="${BASE_PATH}"
         mkdir -p hangover/fex/build_unix
         pushd hangover/fex/build_unix || exit
-        CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+        CC=clang-15 CXX=clang++-15 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" FEXCore_shared
         popd || exit
     }
