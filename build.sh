@@ -124,7 +124,7 @@ detect_arch() {
         pushd hangover/fex/build_unix || exit
 
         unset CC CXX
-        CC=clang-15 CXX=clang++-15 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+        CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" FEXCore_shared
 
         popd || exit
