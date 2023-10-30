@@ -77,9 +77,11 @@ detect_arch() {
         printf "${CYAN}" "Installing LLVM..."
         mkdir -p llvm
         pushd llvm || exit
+
         curl -L -o "${LLVM_FILE_NAME}" "${LLVM_URL}"
         tar -xJvf "${LLVM_FILE_NAME}"
         rm -f "${LLVM_FILE_NAME}"
+
         popd || exit
     }
 
@@ -98,9 +100,11 @@ detect_arch() {
         export PATH="${BASE_PATH}"
         mkdir hangover/qemu/build
         pushd hangover/qemu/build || exit
+
         unset CC CXX
         ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
         make -j"$(nproc)"
+
         popd || exit
     }
 
@@ -110,9 +114,11 @@ detect_arch() {
         export PATH="${BASE_PATH}"
         mkdir -p hangover/fex/build_unix
         pushd hangover/fex/build_unix || exit
+
         unset CC CXX
         CC=clang-15 CXX=clang++-15 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" FEXCore_shared
+
         popd || exit
     }
 
@@ -125,6 +131,7 @@ detect_arch() {
         unset CC CXX
         cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" wow64fex
+
         popd || exit
     }
 
@@ -142,8 +149,29 @@ detect_arch() {
         # shellcheck disable=SC2086
         ../configure ${WINE_BUILD_OPTION}
         make -j"$(nproc)"
+
+        printf "${CYAN}" "Installing Wine..."
+        mkdir -p "../../../${INSTALL_FOLDER_NAME}"
         make install --prefix "../../../${INSTALL_FOLDER_NAME}"
         popd || exit
+    }
+
+    copy_library() {
+        if [ -f hangover/qemu/build/libqemu-arm.so ]; then
+            cp hangover/qemu/build/libqemu-arm.so ${INSTALL_FOLDER_NAME}/
+        fi
+
+        if [ -f hangover/qemu/build/libqemu-i386.so ]; then
+            cp hangover/qemu/build/libqemu-i386.so ${INSTALL_FOLDER_NAME}/
+        fi
+
+        if [ -f hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ]; then
+            cp hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ${INSTALL_FOLDER_NAME}/
+        fi
+
+        if [ -f hangover/fex/build_pe/Bin/libwow64fex.dll ]; then
+            cp hangover/fex/build_pe/Bin/libwow64fex.dll ${INSTALL_FOLDER_NAME}/
+        fi
     }
 
     sudo apt update
@@ -203,6 +231,7 @@ detect_arch() {
         build_fex_unix
         build_fex_pe
         build_wine
+        copy_library
     elif [ arm64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected arm64!"
 
@@ -257,6 +286,7 @@ detect_arch() {
         build_fex_unix
         build_fex_pe
         build_wine
+        copy_library
     fi
 }
 
