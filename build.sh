@@ -92,7 +92,7 @@ detect_arch() {
             libpixman-1-dev \
             zlib1g-dev \
             ninja-build \
-            gcc
+            build-essential
 
         printf "${CYAN}" "Building QEMU..."
         export PATH="${BASE_PATH}"
@@ -185,7 +185,8 @@ detect_arch() {
             libusb-1.0-0-dev \
             libv4l-dev \
             flex \
-            libbison-dev
+            libbison-dev \
+            build-essential
         "
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
@@ -239,7 +240,7 @@ detect_arch() {
             libv4l-dev \
             flex \
             libbison-dev \
-            clang
+            build-essential
         "
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64"
