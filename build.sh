@@ -110,6 +110,14 @@ detect_arch() {
 
     # Build FEX Unix
     build_fex_unix() {
+        printf "${CYAN}" "Installing FEX dependencies..."
+        sudo apt install -y \
+            cmake \
+            clang \
+            libsdl2-dev \
+            libepoxy-dev \
+            build-essential
+
         printf "${CYAN}" "Building FEX(Unix)..."
         export PATH="${BASE_PATH}"
         mkdir -p hangover/fex/build_unix
