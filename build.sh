@@ -149,8 +149,8 @@ detect_arch() {
         printf "${CYAN}" "You selected x86_64!"
 
         # x86_64 environments
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
+        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231017/llvm-mingw-20231017-ucrt-ubuntu-20.04-x86_64.tar.xz"
+        export LLVM_FOLDER_NAME="llvm-mingw-20231017-ucrt-ubuntu-20.04-x86_64"
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export INSTALL_FOLDER_NAME="build_x86_64"
         export WINE_DEPENDENCIES="
@@ -203,8 +203,8 @@ detect_arch() {
         printf "${CYAN}" "You selected arm64!"
 
         # arm64 environments
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64"
+        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231017/llvm-mingw-20231017-ucrt-ubuntu-20.04-aarch64.tar.xz"
+        export LLVM_FOLDER_NAME="llvm-mingw-20231017-ucrt-ubuntu-20.04-aarch64"
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export INSTALL_FOLDER_NAME="build_arm64"
         export WINE_DEPENDENCIES="
