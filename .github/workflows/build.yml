@@ -30,6 +30,7 @@ jobs:
 
     - name: Some test
       run: |
+        set -eux
         ls build
         ls build/hangover/qemu/build
         ls build/hangover/fex/build_unix
