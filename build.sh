@@ -17,8 +17,7 @@ check_options() {
     if ! (type curl > /dev/null 2>&1); then
         printf "${RED}" "curl command not found!"
         printf "${CYAN}" "Installing curl..."
-        apt update
-        apt install -y curl
+        sudo apt install -y curl
     else
         printf "${CYAN}" "curl command found!"
     fi
@@ -40,24 +39,25 @@ check_options() {
 }
 
 # Check sudo command
-check_sudo_command() {
-    if ! (type sudo > /dev/null 2>&1); then
-        printf "${RED}" "sudo command not found!"
-        printf "${CYAN}" "Installing sudo..."
-        apt update
-        apt install -y sudo
-    else
-        printf "${CYAN}" "sudo command found!"
-    fi
-}
+# check_sudo_command() {
+#     if ! (type sudo > /dev/null 2>&1); then
+#         printf "${RED}" "sudo command not found!"
+#         printf "${CYAN}" "Installing sudo..."
+#         apt update
+#         apt install -y sudo
+#     else
+#         printf "${CYAN}" "sudo command found!"
+#     fi
+#
+#     sudo apt update
+# }
 
 # Get hangover repository hash
 clone_hangover() {
     if ! (type git > /dev/null 2>&1); then
         printf "${RED}" "git command not found!"
         printf "${CYAN}" "Installing git..."
-        apt update
-        apt install -y git
+        sudo apt install -y git
     else
         printf "${CYAN}" "git command found!"
     fi
