@@ -28,6 +28,14 @@ jobs:
         popd
         EOS
 
+    - name: Some test
+      run: |
+        ls build
+        ls build/hangover/qemu/build
+        ls build/hangover/fex/build_unix
+        ls build/hangover/fex/build_pe
+        rm -rf build/hangover
+
     - name: Build Hangover on arm64
       run: |
         docker run --rm -i -v $PWD:/root --name arm64_build arm64v8/ubuntu:jammy bash <<EOS
