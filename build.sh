@@ -158,11 +158,11 @@ detect_arch() {
         unset CC CXX
         # shellcheck disable=SC2086
         ../configure ${WINE_BUILD_OPTION}
-        make -j"$(nproc)"
+        make -j"$(nproc)" --prefix="../../../${INSTALL_FOLDER_NAME}"
 
         printf "${CYAN}" "Installing Wine..."
         mkdir -p "../../../${INSTALL_FOLDER_NAME}"
-        sudo env PATH="$PATH" make install --prefix="../../../${INSTALL_FOLDER_NAME}"
+        sudo env PATH="$PATH" make install
 
         popd || exit
     }
