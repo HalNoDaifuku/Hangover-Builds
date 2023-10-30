@@ -26,6 +26,7 @@ jobs:
         pushd /root
         ./build.sh --arch=x86_64
         popd
+
         EOS
 
     - name: Some test
@@ -47,4 +48,5 @@ jobs:
         pushd /root
         ./build.sh --arch=arm64
         popd
+
         EOS
