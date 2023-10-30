@@ -157,8 +157,8 @@ detect_arch() {
 
         unset CC CXX
         # shellcheck disable=SC2086
-        ../configure ${WINE_BUILD_OPTION}
-        make -j"$(nproc)" --prefix="../../../${INSTALL_FOLDER_NAME}"
+        ../configure ${WINE_BUILD_OPTION} --prefix="../../../${INSTALL_FOLDER_NAME}"
+        make -j"$(nproc)"
 
         printf "${CYAN}" "Installing Wine..."
         mkdir -p "../../../${INSTALL_FOLDER_NAME}"
