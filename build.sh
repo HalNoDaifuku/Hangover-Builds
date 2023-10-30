@@ -136,6 +136,7 @@ detect_arch() {
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         mkdir -p hangover/fex/build_pe
         pushd hangover/fex/build_pe || exit
+
         unset CC CXX
         cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" wow64fex
@@ -153,6 +154,7 @@ detect_arch() {
         mkdir -p hangover/wine/build
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         pushd hangover/wine/build || exit
+
         unset CC CXX
         # shellcheck disable=SC2086
         ../configure ${WINE_BUILD_OPTION}
@@ -161,6 +163,7 @@ detect_arch() {
         printf "${CYAN}" "Installing Wine..."
         mkdir -p "../../../${INSTALL_FOLDER_NAME}"
         make install --prefix "../../../${INSTALL_FOLDER_NAME}"
+
         popd || exit
     }
 
