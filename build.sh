@@ -69,14 +69,14 @@ clone_hangover() {
 detect_arch() {
     # Install LLVM
     install_llvm() {
-        printf "${CYAN}" "Installing xz-utils..."
-        sudo apt install -y xz-utils
+        printf "${CYAN}" "Installing tar..."
+        sudo apt install -y tar
 
         printf "${CYAN}" "Installing LLVM..."
         mkdir -p llvm
         pushd llvm || exit
         curl -L -o "${LLVM_FILE_NAME}" "${LLVM_URL}"
-        tar -xJfv "${LLVM_FILE_NAME}"
+        tar -xJvf "${LLVM_FILE_NAME}"
         rm -f "${LLVM_FILE_NAME}"
         popd || exit
     }
