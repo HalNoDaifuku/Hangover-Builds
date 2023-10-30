@@ -149,6 +149,10 @@ detect_arch() {
         printf "${CYAN}" "You selected x86_64!"
 
         # x86_64 environments
+        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
+        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
+        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
+        export INSTALL_FOLDER_NAME="build_x86_64"
         export WINE_DEPENDENCIES="
             gcc-multilib \
             gcc-mingw-w64 \
@@ -188,11 +192,7 @@ detect_arch() {
             libbison-dev \
             build-essential
         "
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-x86_64"
-        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export WINE_BUILD_OPTION="--enable-win64 --disable-tests --with-mingw --enable-archs=i386,x86_64,arm"
-        export INSTALL_FOLDER_NAME="build_x86_64"
 
         install_llvm
         build_qemu
@@ -203,6 +203,10 @@ detect_arch() {
         printf "${CYAN}" "You selected arm64!"
 
         # arm64 environments
+        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64.tar.xz"
+        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64"
+        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
+        export INSTALL_FOLDER_NAME="build_arm64"
         export WINE_DEPENDENCIES="
             gcc-multilib \
             gcc-mingw-w64 \
@@ -242,11 +246,7 @@ detect_arch() {
             libbison-dev \
             build-essential
         "
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20230614/llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20230614-ucrt-ubuntu-20.04-aarch64"
-        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
-        export INSTALL_FOLDER_NAME="build_arm64"
 
         install_llvm
         build_qemu
