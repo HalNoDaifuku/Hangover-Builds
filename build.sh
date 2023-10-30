@@ -256,7 +256,6 @@ detect_arch() {
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
         export INSTALL_FOLDER_NAME="build_arm64"
         export WINE_DEPENDENCIES="
-            gcc-multilib \
             gcc-mingw-w64 \
             libasound2-dev \
             libpulse-dev \
