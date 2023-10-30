@@ -98,6 +98,7 @@ detect_arch() {
         export PATH="${BASE_PATH}"
         mkdir hangover/qemu/build
         pushd hangover/qemu/build || exit
+        unset CC CXX
         ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
         make -j"$(nproc)"
         popd || exit
@@ -109,6 +110,7 @@ detect_arch() {
         export PATH="${BASE_PATH}"
         mkdir -p hangover/fex/build_unix
         pushd hangover/fex/build_unix || exit
+        unset CC CXX
         CC=clang-15 CXX=clang++-15 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" FEXCore_shared
         popd || exit
@@ -120,6 +122,7 @@ detect_arch() {
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         mkdir -p hangover/fex/build_pe
         pushd hangover/fex/build_pe || exit
+        unset CC CXX
         cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
         make -j"$(nproc)" wow64fex
         popd || exit
@@ -135,6 +138,7 @@ detect_arch() {
         mkdir -p hangover/wine/build
         export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
         pushd hangover/wine/build || exit
+        unset CC CXX
         # shellcheck disable=SC2086
         ../configure ${WINE_BUILD_OPTION}
         make -j"$(nproc)"
