@@ -36,7 +36,7 @@ jobs:
         ls build/hangover/qemu/build
         ls build/hangover/fex/build_unix
         ls build/hangover/fex/build_pe
-        rm -rf build/hangover
+        sudo rm -rf build/hangover
 
     - name: Build Hangover on arm64
       run: |
