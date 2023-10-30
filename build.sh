@@ -91,7 +91,8 @@ detect_arch() {
             libfdt-dev \
             libpixman-1-dev \
             zlib1g-dev \
-            ninja-build
+            ninja-build \
+            gcc
 
         printf "${CYAN}" "Building QEMU..."
         export PATH="${BASE_PATH}"
