@@ -162,7 +162,7 @@ detect_arch() {
 
         printf "${CYAN}" "Installing Wine..."
         mkdir -p "../../../${INSTALL_FOLDER_NAME}"
-        make install --prefix "../../../${INSTALL_FOLDER_NAME}"
+        make install --prefix="../../../${INSTALL_FOLDER_NAME}"
 
         popd || exit
     }
