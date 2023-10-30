@@ -256,7 +256,7 @@ detect_arch() {
 check_options "$@"
 mkdir -p build
 pushd build || exit
-check_sudo_command
+# check_sudo_command
 clone_hangover
 detect_arch
 popd || exit
