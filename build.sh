@@ -67,131 +67,6 @@ clone_hangover() {
 
 # Detect arch
 detect_arch() {
-    # Install LLVM
-    install_llvm() {
-        printf "${CYAN}" "Installing tar,xz-utils..."
-        sudo apt install -y \
-        tar \
-        xz-utils
-
-        printf "${CYAN}" "Installing LLVM..."
-        mkdir -p llvm
-        pushd llvm || exit
-
-        curl -L -o "${LLVM_FILE_NAME}" "${LLVM_URL}"
-        tar -xJvf "${LLVM_FILE_NAME}"
-        rm -f "${LLVM_FILE_NAME}"
-
-        popd || exit
-    }
-
-    # Build QEMU
-    build_qemu() {
-        printf "${CYAN}" "Installing QEMU dependencies..."
-        sudo apt install -y \
-            libglib2.0-dev \
-            libfdt-dev \
-            libpixman-1-dev \
-            zlib1g-dev \
-            ninja-build \
-            build-essential
-
-        printf "${CYAN}" "Building QEMU..."
-        export PATH="${BASE_PATH}"
-        mkdir hangover/qemu/build
-        pushd hangover/qemu/build || exit
-
-        unset CC CXX
-        ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
-        make -j"$(nproc)"
-
-        popd || exit
-    }
-
-    # Build FEX Unix
-    build_fex_unix() {
-        printf "${CYAN}" "Installing FEX dependencies..."
-        sudo apt install -y \
-            cmake \
-            clang \
-            libsdl2-dev \
-            libepoxy-dev \
-            build-essential
-
-        printf "${CYAN}" "Building FEX(Unix)..."
-        export PATH="${BASE_PATH}"
-        mkdir -p hangover/fex/build_unix
-        pushd hangover/fex/build_unix || exit
-
-        unset CC CXX
-        CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
-        make -j"$(nproc)" FEXCore_shared
-
-        popd || exit
-    }
-
-    # Build FEX PE
-    build_fex_pe() {
-        printf "${CYAN}" "Building FEX(PE)..."
-        export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
-        mkdir -p hangover/fex/build_pe
-        pushd hangover/fex/build_pe || exit
-
-        unset CC CXX
-        cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
-        make -j"$(nproc)" wow64fex
-
-        popd || exit
-    }
-
-    # Build Wine
-    build_wine() {
-        printf "${CYAN}" "Installing Wine dependencies..."
-        # shellcheck disable=SC2086
-        sudo apt install -y ${WINE_DEPENDENCIES}
-
-        printf "${CYAN}" "Building Wine..."
-        mkdir -p hangover/wine/build
-        export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
-        pushd hangover/wine/build || exit
-
-        unset CC CXX
-        mkdir -p "../../../${INSTALL_FOLDER_NAME}"
-        # shellcheck disable=SC2086
-        ../configure ${WINE_BUILD_OPTION} --prefix="../../../${INSTALL_FOLDER_NAME}"
-        make -j"$(nproc)"
-
-        printf "${CYAN}" "Installing Wine..."
-        sudo env PATH="$PATH" make install
-
-        popd || exit
-    }
-
-    copy_library() {
-        if [ -f hangover/qemu/build/libqemu-arm.so ]; then
-            printf "${CYAN}" "Copying libqemu-arm.so..."
-            cp hangover/qemu/build/libqemu-arm.so ${INSTALL_FOLDER_NAME}/
-        fi
-
-        if [ -f hangover/qemu/build/libqemu-i386.so ]; then
-            printf "${CYAN}" "Copying libqemu-i386.so..."
-            cp hangover/qemu/build/libqemu-i386.so ${INSTALL_FOLDER_NAME}/
-        fi
-
-        if [ -f hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ]; then
-            printf "${CYAN}" "Copying libFEXCore.so..."
-            cp hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ${INSTALL_FOLDER_NAME}/
-        fi
-
-        if [ -f hangover/fex/build_pe/Bin/libwow64fex.dll ]; then
-            printf "${CYAN}" "Copying libwow64fex.dll..."
-            cp hangover/fex/build_pe/Bin/libwow64fex.dll ${INSTALL_FOLDER_NAME}/
-        fi
-    }
-
-    sudo apt update
-
-    # Detect arch
     if [ x86_64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected x86_64!"
 
@@ -240,13 +115,6 @@ detect_arch() {
             build-essential
         "
         export WINE_BUILD_OPTION="--enable-win64 --disable-tests --with-mingw --enable-archs=i386,x86_64,arm"
-
-        install_llvm
-        build_qemu
-        build_fex_unix
-        build_fex_pe
-        build_wine
-        copy_library
     elif [ arm64 = "${ARCH}" ]; then
         printf "${CYAN}" "You selected arm64!"
 
@@ -294,13 +162,128 @@ detect_arch() {
             build-essential
         "
         export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
+    fi
+}
 
-        install_llvm
-        build_qemu
-        build_fex_unix
-        build_fex_pe
-        build_wine
-        copy_library
+# Install LLVM
+install_llvm() {
+    printf "${CYAN}" "Installing tar,xz-utils..."
+    sudo apt install -y \
+    tar \
+    xz-utils
+
+    printf "${CYAN}" "Installing LLVM..."
+    mkdir -p llvm
+    pushd llvm || exit
+
+    curl -L -o "${LLVM_FILE_NAME}" "${LLVM_URL}"
+    tar -xJvf "${LLVM_FILE_NAME}"
+    rm -f "${LLVM_FILE_NAME}"
+
+    popd || exit
+}
+
+# Build QEMU
+build_qemu() {
+    printf "${CYAN}" "Installing QEMU dependencies..."
+    sudo apt install -y \
+        libglib2.0-dev \
+        libfdt-dev \
+        libpixman-1-dev \
+        zlib1g-dev \
+        ninja-build \
+        build-essential
+
+    printf "${CYAN}" "Building QEMU..."
+    export PATH="${BASE_PATH}"
+    mkdir hangover/qemu/build
+    pushd hangover/qemu/build || exit
+
+    unset CC CXX
+    ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
+    make -j"$(nproc)"
+
+    popd || exit
+}
+
+# Build FEX Unix
+build_fex_unix() {
+    printf "${CYAN}" "Installing FEX dependencies..."
+    sudo apt install -y \
+        cmake \
+        clang \
+        libsdl2-dev \
+        libepoxy-dev \
+        build-essential
+
+    printf "${CYAN}" "Building FEX(Unix)..."
+    export PATH="${BASE_PATH}"
+    mkdir -p hangover/fex/build_unix
+    pushd hangover/fex/build_unix || exit
+
+    unset CC CXX
+    CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+    make -j"$(nproc)" FEXCore_shared
+
+    popd || exit
+}
+
+# Build FEX PE
+build_fex_pe() {
+    printf "${CYAN}" "Building FEX(PE)..."
+    export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
+    mkdir -p hangover/fex/build_pe
+    pushd hangover/fex/build_pe || exit
+
+    unset CC CXX
+    cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+    make -j"$(nproc)" wow64fex
+
+    popd || exit
+}
+
+# Build Wine
+build_wine() {
+    printf "${CYAN}" "Installing Wine dependencies..."
+    # shellcheck disable=SC2086
+    sudo apt install -y ${WINE_DEPENDENCIES}
+
+    printf "${CYAN}" "Building Wine..."
+    mkdir -p hangover/wine/build
+    export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
+    pushd hangover/wine/build || exit
+
+    unset CC CXX
+    mkdir -p "../../../${INSTALL_FOLDER_NAME}"
+    # shellcheck disable=SC2086
+    ../configure ${WINE_BUILD_OPTION} --prefix="../../../${INSTALL_FOLDER_NAME}"
+    make -j"$(nproc)"
+
+    printf "${CYAN}" "Installing Wine..."
+    sudo env PATH="$PATH" make install
+
+    popd || exit
+}
+
+copy_library() {
+    if [ -f hangover/qemu/build/libqemu-arm.so ]; then
+        printf "${CYAN}" "Copying libqemu-arm.so..."
+        cp hangover/qemu/build/libqemu-arm.so ${INSTALL_FOLDER_NAME}/
+    fi
+
+    if [ -f hangover/qemu/build/libqemu-i386.so ]; then
+        printf "${CYAN}" "Copying libqemu-i386.so..."
+        cp hangover/qemu/build/libqemu-i386.so ${INSTALL_FOLDER_NAME}/
+    fi
+
+    if [ -f hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ]; then
+        printf "${CYAN}" "Copying libFEXCore.so..."
+        cp hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ${INSTALL_FOLDER_NAME}/
+    fi
+
+    if [ -f hangover/fex/build_pe/Bin/libwow64fex.dll ]; then
+        printf "${CYAN}" "Copying libwow64fex.dll..."
+        cp hangover/fex/build_pe/Bin/libwow64fex.dll ${INSTALL_FOLDER_NAME}/
     fi
 }
 
@@ -311,4 +294,10 @@ pushd build || exit
 # check_sudo_command
 clone_hangover
 detect_arch
+install_llvm
+build_qemu
+build_fex_unix
+build_fex_pe
+build_wine
+copy_library
 popd || exit
