@@ -256,7 +256,7 @@ build_wine() {
     unset CC CXX
     mkdir -p "../../../${INSTALL_FOLDER_NAME}"
     # shellcheck disable=SC2086
-    ../configure ${WINE_BUILD_OPTION} --prefix="../../../${INSTALL_FOLDER_NAME}"
+    ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
     make -j"$(nproc)"
 
     printf "${CYAN}" "Installing Wine..."
