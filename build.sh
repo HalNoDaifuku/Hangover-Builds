@@ -156,12 +156,12 @@ detect_arch() {
         pushd hangover/wine/build || exit
 
         unset CC CXX
+        mkdir -p "../../../${INSTALL_FOLDER_NAME}"
         # shellcheck disable=SC2086
         ../configure ${WINE_BUILD_OPTION} --prefix="../../../${INSTALL_FOLDER_NAME}"
         make -j"$(nproc)"
 
         printf "${CYAN}" "Installing Wine..."
-        mkdir -p "../../../${INSTALL_FOLDER_NAME}"
         sudo env PATH="$PATH" make install
 
         popd || exit
