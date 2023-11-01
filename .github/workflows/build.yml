@@ -30,8 +30,7 @@ jobs:
         EOS
 
     - name: Reset Build
-      run: |
-        sudo rm -rf build/hangover
+      run: sudo rm -rf build/hangover
 
     - name: Build Hangover on arm64
       run: |
