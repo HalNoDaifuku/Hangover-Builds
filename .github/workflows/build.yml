@@ -29,13 +29,8 @@ jobs:
 
         EOS
 
-    - name: Some test
+    - name: Reset Build
       run: |
-        set -eux
-        ls build
-        ls build/hangover/qemu/build
-        ls build/hangover/fex/build_unix
-        ls build/hangover/fex/build_pe
         sudo rm -rf build/hangover
 
     - name: Build Hangover on arm64
