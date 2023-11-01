@@ -268,22 +268,22 @@ build_wine() {
 copy_library() {
     if [ -f hangover/qemu/build/libqemu-arm.so ]; then
         printf "${CYAN}" "Copying libqemu-arm.so..."
-        cp hangover/qemu/build/libqemu-arm.so ${INSTALL_FOLDER_NAME}/
+        cp hangover/qemu/build/libqemu-arm.so "${INSTALL_FOLDER_NAME}/"
     fi
 
     if [ -f hangover/qemu/build/libqemu-i386.so ]; then
         printf "${CYAN}" "Copying libqemu-i386.so..."
-        cp hangover/qemu/build/libqemu-i386.so ${INSTALL_FOLDER_NAME}/
+        cp hangover/qemu/build/libqemu-i386.so "${INSTALL_FOLDER_NAME}/"
     fi
 
     if [ -f hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ]; then
         printf "${CYAN}" "Copying libFEXCore.so..."
-        cp hangover/fex/build_unix/FEXCore/Source/libFEXCore.so ${INSTALL_FOLDER_NAME}/
+        cp hangover/fex/build_unix/FEXCore/Source/libFEXCore.so "${INSTALL_FOLDER_NAME}/"
     fi
 
     if [ -f hangover/fex/build_pe/Bin/libwow64fex.dll ]; then
         printf "${CYAN}" "Copying libwow64fex.dll..."
-        cp hangover/fex/build_pe/Bin/libwow64fex.dll ${INSTALL_FOLDER_NAME}/
+        cp hangover/fex/build_pe/Bin/libwow64fex.dll "${INSTALL_FOLDER_NAME}/"
     fi
 }
 
