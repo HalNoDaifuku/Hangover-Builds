@@ -10,7 +10,7 @@ export RED="\033[1;31m%s\033[m\n"
 export CYAN="\033[1;36m%s\033[m\n"
 export GETOPTIONS_URL="https://github.com/ko1nksm/getoptions/releases/download/v3.3.0/getoptions"
 export HANGOVER_REPOSITORY="https://github.com/AndreRH/hangover.git"
-export BASE_PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export BASE_PATH="/usr/lib/ccache:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 # Check options
 check_options() {
@@ -160,6 +160,12 @@ detect_arch() {
     fi
 }
 
+# Install ccache
+install_ccache() {
+    apt install -y ccache
+    export CCACHE_DIR=/root/.ccache
+}
+
 # Install LLVM
 install_llvm() {
     printf "${CYAN}" "Installing tar,xz-utils..."
@@ -217,7 +223,7 @@ build_fex_unix() {
     pushd hangover/fex/build_unix || exit
 
     unset CC CXX
-    CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+    CC='ccache clang' CXX='ccache clang++' cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
     make -j"$(nproc)" FEXCore_shared
 
     popd || exit
@@ -251,7 +257,7 @@ build_wine() {
     unset CC CXX
     mkdir -p "../../../${INSTALL_FOLDER_NAME}"
     # shellcheck disable=SC2086
-    ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
+    CC='ccache gcc' ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
     make -j"$(nproc)"
 
     printf "${CYAN}" "Installing Wine..."
@@ -289,6 +295,7 @@ pushd build || exit
 check_sudo_command
 clone_hangover
 detect_arch
+install_ccache
 install_llvm
 build_qemu
 build_fex_unix
