@@ -4,7 +4,7 @@
 
 This is unofficial builds. Not official!
 
-## Dependencies
+## Build dependencies
 
 - curl
 - sudo
