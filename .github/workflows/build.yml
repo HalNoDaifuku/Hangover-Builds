@@ -21,7 +21,7 @@ jobs:
         docker run --rm -i -v $PWD:/root --cpus $(nproc) --name x86_64_build amd64/ubuntu:jammy bash <<EOS
 
         apt update
-        apt install -y sudo
+        apt install -y curl sudo
 
         pushd /root
         ./build.sh --arch=x86_64
@@ -37,7 +37,7 @@ jobs:
         docker run --rm -i -v $PWD:/root --cpus $(nproc) --name arm64_build arm64v8/ubuntu:jammy bash <<EOS
 
         apt update
-        apt install -y sudo
+        apt install -y curl sudo
 
         pushd /root
         ./build.sh --arch=arm64
