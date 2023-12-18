@@ -16,12 +16,12 @@ jobs:
     - name: Setup cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/.ccache_x86_64
-        key: ccache_x86_64
+        path: ~/.ccache
+        key: ccache_ubuntu_x86_64
 
     - name: Build Hangover on x86_64
       run: |
-        docker run --rm -i -v $PWD:/root -v $PWD/.ccache_x86_64:/root/.ccache --cpus $(nproc) --name x86_64_build amd64/ubuntu:jammy bash <<EOF
+        docker run --rm -i -v $PWD:/root -v ~/.ccache:/root/.ccache --cpus $(nproc) --name x86_64_build amd64/ubuntu:jammy bash <<EOF
 
         apt update
         apt install -y curl sudo
@@ -46,12 +46,12 @@ jobs:
     - name: Setup cache
       uses: actions/cache@v3
       with:
-        path: ${{ github.workspace }}/.ccache_arm64
-        key: ccache_arm64
+        path: ~/.ccache
+        key: ccache_ubuntu_arm64
 
     - name: Build Hangover on arm64
       run: |
-        docker run --rm -i -v $PWD:/root -v $PWD/.ccache_arm64:/root/.ccache --cpus $(nproc) --name arm64_build arm64v8/ubuntu:jammy bash <<EOF
+        docker run --rm -i -v $PWD:/root -v ~/.ccache:/root/.ccache --cpus $(nproc) --name arm64_build arm64v8/ubuntu:jammy bash <<EOF
 
         apt update
         apt install -y curl sudo
