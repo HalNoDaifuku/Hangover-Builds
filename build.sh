@@ -201,7 +201,7 @@ build_qemu() {
     pushd hangover/qemu/build || exit
 
     unset CC CXX
-    ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
+    CC='ccache gcc' CXX='ccache g++' ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
     make -j"$(nproc)"
 
     popd || exit
@@ -237,7 +237,7 @@ build_fex_pe() {
     pushd hangover/fex/build_pe || exit
 
     unset CC CXX
-    cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
+    CC='ccache clang' CXX='ccache clang++' cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
     make -j"$(nproc)" wow64fex
 
     popd || exit
@@ -257,7 +257,7 @@ build_wine() {
     unset CC CXX
     mkdir -p "../../../${INSTALL_FOLDER_NAME}"
     # shellcheck disable=SC2086
-    CC='ccache gcc' ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
+    CC='ccache gcc' CXX='ccache g++' ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
     make -j"$(nproc)"
 
     printf "${CYAN}" "Installing Wine..."
