@@ -16,8 +16,7 @@ export BASE_PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 check_options() {
     if ! (type curl > /dev/null 2>&1); then
         printf "${RED}" "curl command not found!"
-        printf "${CYAN}" "Installing curl..."
-        sudo apt install -y curl
+        return 1
     else
         printf "${CYAN}" "curl command found!"
     fi
@@ -39,18 +38,14 @@ check_options() {
 }
 
 # Check sudo command
-# check_sudo_command() {
-#     if ! (type sudo > /dev/null 2>&1); then
-#         printf "${RED}" "sudo command not found!"
-#         printf "${CYAN}" "Installing sudo..."
-#         apt update
-#         apt install -y sudo
-#     else
-#         printf "${CYAN}" "sudo command found!"
-#     fi
-#
-#     sudo apt update
-# }
+check_sudo_command() {
+    if ! (type sudo > /dev/null 2>&1); then
+        printf "${RED}" "sudo command not found!"
+        return 1
+    else
+        printf "${CYAN}" "sudo command found!"
+    fi
+}
 
 # Get hangover repository hash
 clone_hangover() {
@@ -291,7 +286,7 @@ copy_library() {
 check_options "$@"
 mkdir -p build
 pushd build || exit
-# check_sudo_command
+check_sudo_command
 clone_hangover
 detect_arch
 install_llvm
