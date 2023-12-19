@@ -300,7 +300,7 @@ install_llvm
 build_qemu
 build_fex_unix
 build_fex_pe
-build_wine
-copy_library
+# build_wine
+# copy_library
 printf "${CYAN}" "The build is complete!!"
 popd || exit
