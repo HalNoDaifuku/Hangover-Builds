@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get time
+      run: echo "CURRENT_DATETIME=$(date '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -17,7 +20,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.ccache
-        key: ccache-ubuntu-x86_64-${{ github.run_attempt }}-${{ github.sha }}
+        key: ccache-ubuntu-x86_64-${{ github.sha }}-${{ env.CURRENT_DATETIME }}
         restore-keys: ccache-ubuntu-x86_64-
 
     - name: Build Hangover on x86_64
@@ -38,6 +41,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get time
+      run: echo "CURRENT_DATETIME=$(date '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -48,7 +54,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.ccache
-        key: ccache-ubuntu-arm64-${{ github.run_attempt }}-${{ github.sha }}
+        key: ccache-ubuntu-arm64-${{ github.sha }}-${{ env.CURRENT_DATETIME }}
         restore-keys: ccache-ubuntu-arm64-
 
     - name: Build Hangover on arm64
