@@ -297,10 +297,10 @@ clone_hangover
 detect_arch
 install_ccache
 install_llvm
-build_qemu
-build_fex_unix
-build_fex_pe
-# build_wine
+# build_qemu
+# build_fex_unix
+# build_fex_pe
+build_wine
 # copy_library
 printf "${CYAN}" "The build is complete!!"
 popd || exit
