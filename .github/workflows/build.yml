@@ -17,7 +17,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.ccache
-        key: ccache_ubuntu_x86_64
+        key: ccache-ubuntu-x86_64-${{ github.run_attempt }}-${{ github.sha }}
+        restore-keys: ccache-ubuntu-x86_64-
 
     - name: Build Hangover on x86_64
       run: |
@@ -47,7 +48,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/.ccache
-        key: ccache_ubuntu_arm64
+        key: ccache-ubuntu-arm64-${{ github.run_attempt }}-${{ github.sha }}
+        restore-keys: ccache-ubuntu-arm64-
 
     - name: Build Hangover on arm64
       run: |
