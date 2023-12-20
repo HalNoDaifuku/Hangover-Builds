@@ -12,8 +12,7 @@ export GETOPTIONS_URL="https://github.com/ko1nksm/getoptions/releases/download/v
 export HANGOVER_REPOSITORY="https://github.com/AndreRH/hangover.git"
 export BASE_PATH="/usr/lib/ccache:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-# Check options
-check_options() {
+check_dependencies() {
     if ! (type curl > /dev/null 2>&1); then
         printf "${RED}" "curl command not found!"
         return 1
@@ -21,6 +20,16 @@ check_options() {
         printf "${CYAN}" "curl command found!"
     fi
 
+    if ! (type sudo > /dev/null 2>&1); then
+        printf "${RED}" "sudo command not found!"
+        return 1
+    else
+        printf "${CYAN}" "sudo command found!"
+    fi
+}
+
+# Check options
+check_options() {
     # getoptions: https://github.com/ko1nksm/getoptions
     getoptions() {
         curl -fsSL "${GETOPTIONS_URL}" | bash -s -- "$@"
@@ -35,16 +44,6 @@ check_options() {
     }
 
     eval "$(getoptions parser_definition - "$0") exit 1"
-}
-
-# Check sudo command
-check_sudo_command() {
-    if ! (type sudo > /dev/null 2>&1); then
-        printf "${RED}" "sudo command not found!"
-        return 1
-    else
-        printf "${CYAN}" "sudo command found!"
-    fi
 }
 
 # Get hangover repository hash
@@ -289,10 +288,10 @@ copy_library() {
 }
 
 # Run
+check_dependencies
 check_options "$@"
 mkdir -p build
 pushd build || exit
-check_sudo_command
 clone_hangover
 detect_arch
 install_ccache
