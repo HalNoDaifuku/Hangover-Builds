@@ -10,6 +10,7 @@ export RED="\033[1;31m%s\033[m\n"
 export CYAN="\033[1;36m%s\033[m\n"
 export GETOPTIONS_URL="https://github.com/ko1nksm/getoptions/releases/download/v3.3.0/getoptions"
 export HANGOVER_REPOSITORY="https://github.com/AndreRH/hangover.git"
+export MOLD_TAG_NAME="v2.4.0"
 export BASE_PATH="/usr/lib/ccache:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 check_dependencies() {
@@ -146,19 +147,6 @@ detect_arch() {
     fi
 }
 
-# Get hangover repository hash
-clone_hangover() {
-    if ! (type git > /dev/null 2>&1); then
-        printf "${RED}" "git command not found!"
-        printf "${CYAN}" "Installing git..."
-        sudo apt install -y git
-    else
-        printf "${CYAN}" "git command found!"
-    fi
-
-    git clone --recursive "${HANGOVER_REPOSITORY}" hangover
-}
-
 # Install ccache
 install_ccache() {
     apt install -y ccache
@@ -181,6 +169,19 @@ install_llvm() {
     rm -f "${LLVM_FILE_NAME}"
 
     popd || exit
+}
+
+# Get hangover repository hash
+clone_hangover() {
+    if ! (type git > /dev/null 2>&1); then
+        printf "${RED}" "git command not found!"
+        printf "${CYAN}" "Installing git..."
+        sudo apt install -y git
+    else
+        printf "${CYAN}" "git command found!"
+    fi
+
+    git clone --recursive "${HANGOVER_REPOSITORY}" hangover
 }
 
 # Build QEMU
@@ -293,9 +294,9 @@ check_options "$@"
 detect_arch
 mkdir -p build
 pushd build || exit
-clone_hangover
 install_ccache
 install_llvm
+clone_hangover
 # build_qemu
 # build_fex_unix
 # build_fex_pe
