@@ -46,19 +46,6 @@ check_options() {
     eval "$(getoptions parser_definition - "$0") exit 1"
 }
 
-# Get hangover repository hash
-clone_hangover() {
-    if ! (type git > /dev/null 2>&1); then
-        printf "${RED}" "git command not found!"
-        printf "${CYAN}" "Installing git..."
-        sudo apt install -y git
-    else
-        printf "${CYAN}" "git command found!"
-    fi
-
-    git clone --recursive "${HANGOVER_REPOSITORY}" hangover
-}
-
 # Detect arch
 detect_arch() {
     if [ x86_64 = "${ARCH}" ]; then
@@ -157,6 +144,19 @@ detect_arch() {
         "
         export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
     fi
+}
+
+# Get hangover repository hash
+clone_hangover() {
+    if ! (type git > /dev/null 2>&1); then
+        printf "${RED}" "git command not found!"
+        printf "${CYAN}" "Installing git..."
+        sudo apt install -y git
+    else
+        printf "${CYAN}" "git command found!"
+    fi
+
+    git clone --recursive "${HANGOVER_REPOSITORY}" hangover
 }
 
 # Install ccache
@@ -290,10 +290,10 @@ copy_library() {
 # Run
 check_dependencies
 check_options "$@"
+detect_arch
 mkdir -p build
 pushd build || exit
 clone_hangover
-detect_arch
 install_ccache
 install_llvm
 # build_qemu
