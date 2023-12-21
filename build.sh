@@ -9,6 +9,7 @@ export VERSION="0.0.1"
 export RED="\033[1;31m%s\033[m\n"
 export CYAN="\033[1;36m%s\033[m\n"
 export GETOPTIONS_URL="https://github.com/ko1nksm/getoptions/releases/download/v3.3.0/getoptions"
+export LLVM_MINGW_TAG_NAME="20231128"
 export HANGOVER_REPOSITORY="https://github.com/AndreRH/hangover.git"
 export BASE_PATH="/usr/lib/ccache:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -52,9 +53,7 @@ detect_arch() {
         printf "${CYAN}" "You selected x86_64!"
 
         # x86_64 environments
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-ubuntu-20.04-x86_64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20231128-ucrt-ubuntu-20.04-x86_64"
-        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
+        export LLVM_MINGW_ARCH="x86_64"
         export INSTALL_FOLDER_NAME="build_x86_64"
         export WINE_DEPENDENCIES="
             gcc-multilib \
@@ -100,9 +99,7 @@ detect_arch() {
         printf "${CYAN}" "You selected arm64!"
 
         # arm64 environments
-        export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-ubuntu-20.04-aarch64.tar.xz"
-        export LLVM_FOLDER_NAME="llvm-mingw-20231128-ucrt-ubuntu-20.04-aarch64"
-        export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
+        export LLVM_MINGW_ARCH="aarch64"
         export INSTALL_FOLDER_NAME="build_arm64"
         export WINE_DEPENDENCIES="
             gcc-mingw-w64 \
@@ -163,9 +160,19 @@ install_llvm() {
     mkdir -p llvm
     pushd llvm || exit
 
-    curl -L -o "${LLVM_FILE_NAME}" "${LLVM_URL}"
-    tar -xJvf "${LLVM_FILE_NAME}"
-    rm -f "${LLVM_FILE_NAME}"
+    curl -OL "$(curl -fsSL "https://api.github.com/repos/mstorsjo/llvm-mingw/releases/tags/${LLVM_MINGW_TAG_NAME}" |\
+        grep browser_download_url |\
+        grep ucrt |\
+        grep ubuntu |\
+        grep "${LLVM_MINGW_ARCH}" |\
+        awk -F': ' '{print $2}' |\
+        sed 's/"//g')"
+
+    find llvm-mingw*.tar.xz -maxdepth 1 -exec tar -xvf {} \;
+    find llvm-mingw*.tar.xz -maxdepth 1 -exec rm -f {} \;
+
+    LLVM_MINGW_PATH="${PWD}/$(find llvm-mingw*/bin -maxdepth 0)"
+    export LLVM_MINGW_PATH
 
     popd || exit
 }
@@ -231,7 +238,7 @@ build_fex_unix() {
 # Build FEX PE
 build_fex_pe() {
     printf "${CYAN}" "Building FEX(PE)..."
-    export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
+    export PATH="${LLVM_MINGW_PATH}:${BASE_PATH}"
     mkdir -p hangover/fex/build_pe
     pushd hangover/fex/build_pe || exit
 
@@ -250,7 +257,7 @@ build_wine() {
 
     printf "${CYAN}" "Building Wine..."
     mkdir -p hangover/wine/build
-    export PATH="$PWD/llvm/${LLVM_FOLDER_NAME}/bin:${BASE_PATH}"
+    export PATH="${LLVM_MINGW_PATH}:${BASE_PATH}"
     pushd hangover/wine/build || exit
 
     unset CC CXX
