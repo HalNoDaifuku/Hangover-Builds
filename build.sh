@@ -10,7 +10,6 @@ export RED="\033[1;31m%s\033[m\n"
 export CYAN="\033[1;36m%s\033[m\n"
 export GETOPTIONS_URL="https://github.com/ko1nksm/getoptions/releases/download/v3.3.0/getoptions"
 export HANGOVER_REPOSITORY="https://github.com/AndreRH/hangover.git"
-export MOLD_TAG_NAME="v2.4.0"
 export BASE_PATH="/usr/lib/ccache:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 check_dependencies() {
@@ -53,7 +52,6 @@ detect_arch() {
         printf "${CYAN}" "You selected x86_64!"
 
         # x86_64 environments
-        export MOLD_ARCH="x86_64"
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-ubuntu-20.04-x86_64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20231128-ucrt-ubuntu-20.04-x86_64"
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
@@ -102,7 +100,6 @@ detect_arch() {
         printf "${CYAN}" "You selected arm64!"
 
         # arm64 environments
-        export MOLD_ARCH="aarch64"
         export LLVM_URL="https://github.com/mstorsjo/llvm-mingw/releases/download/20231128/llvm-mingw-20231128-ucrt-ubuntu-20.04-aarch64.tar.xz"
         export LLVM_FOLDER_NAME="llvm-mingw-20231128-ucrt-ubuntu-20.04-aarch64"
         export LLVM_FILE_NAME="${LLVM_FOLDER_NAME}.tar.xz"
@@ -147,27 +144,6 @@ detect_arch() {
         "
         export WINE_BUILD_OPTION="--disable-tests --with-mingw --enable-archs=i386,aarch64,arm"
     fi
-}
-
-# Install mold
-install_mold() {
-    printf "${CYAN}" "Installing mold..."
-    mkdir -p mold
-    pushd mold || exit
-
-    curl -OL "$(curl -fsSL "https://api.github.com/repos/rui314/mold/releases/tags/${MOLD_TAG_NAME}" |\
-        grep browser_download_url |\
-        grep "${MOLD_ARCH}" |\
-        awk -F': ' '{print $2}' |\
-        sed 's/"//g')"
-
-    find mold*.tar.gz -maxdepth 1 -exec tar -xvf {} \;
-    find mold*.tar.gz -maxdepth 1 -exec rm -f {} \;
-
-    BASE_PATH="${PWD}/$(find mold*/bin -maxdepth 0):${BASE_PATH}"
-    export BASE_PATH
-
-    popd || exit
 }
 
 # Install ccache
@@ -225,7 +201,7 @@ build_qemu() {
 
     unset CC CXX
     CC='ccache gcc' CXX='ccache g++' ../configure --disable-werror --target-list=arm-linux-user,i386-linux-user
-    mold -run make -j"$(nproc)"
+    make -j"$(nproc)"
 
     popd || exit
 }
@@ -247,7 +223,7 @@ build_fex_unix() {
 
     unset CC CXX
     CC='ccache clang' CXX='ccache clang++' cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_LTO=True -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
-    mold -run make -j"$(nproc)" FEXCore_shared
+    make -j"$(nproc)" FEXCore_shared
 
     popd || exit
 }
@@ -261,7 +237,7 @@ build_fex_pe() {
 
     unset CC CXX
     CC='ccache clang' CXX='ccache clang++' cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_mingw.cmake -DENABLE_JEMALLOC=0 -DENABLE_JEMALLOC_GLIBC_ALLOC=0 -DMINGW_TRIPLE=aarch64-w64-mingw32 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTS=False -DENABLE_ASSERTIONS=False ..
-    mold -run make -j"$(nproc)" wow64fex
+    make -j"$(nproc)" wow64fex
 
     popd || exit
 }
@@ -281,7 +257,7 @@ build_wine() {
     mkdir -p "../../../${INSTALL_FOLDER_NAME}"
     # shellcheck disable=SC2086
     CC='ccache gcc' CXX='ccache g++' ../configure ${WINE_BUILD_OPTION} --prefix="$(cd ../../../${INSTALL_FOLDER_NAME}; pwd;)"
-    mold -run make -j"$(nproc)"
+    make -j"$(nproc)"
 
     printf "${CYAN}" "Installing Wine..."
     sudo env PATH="$PATH" make install
@@ -317,7 +293,6 @@ check_options "$@"
 detect_arch
 mkdir -p build
 pushd build || exit
-install_mold
 install_ccache
 install_llvm
 clone_hangover
